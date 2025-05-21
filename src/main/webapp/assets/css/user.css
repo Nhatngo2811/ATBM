@@ -1,0 +1,327 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin: 100px auto 50px auto;
+    width: 60%;
+    display: flex;
+    height: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.sidebar .profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sidebar .profile img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.sidebar .profile span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.sidebar ul li a i {
+    margin-right: 10px;
+}
+
+.sidebar ul li a.active,
+.sidebar ul li a:hover {
+    color: #ff7800;
+    background-color: #f0f0f0;
+}
+
+.content {
+    flex: 1;
+    padding: 30px;
+    background-color: #ffffff;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content h2 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #333;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.content form {
+    max-width: 800px;
+}
+
+.content form .form-group {
+    margin-bottom: 15px;
+}
+
+.content form .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.content form .form-group input,
+.content form .form-group select {
+    width: 85%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 14px;
+}
+
+.content form .form-group input[type="radio"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+.content form .form-group a {
+    color: #1e90ff;
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.content form .form-group a:hover {
+    text-decoration: underline;
+}
+
+.content form .form-group .radio-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.content form .form-group .radio-group label {
+    font-weight: normal;
+    color: #555;
+}
+
+.content form .form-group .radio-group input {
+    margin-right: 5px;
+}
+
+.content form .form-group .date-group {
+    display: flex;
+    gap: 5px;
+}
+
+.content form .form-group .date-group select {
+    width: 32%;
+    padding: 6px;
+    height: 35px;
+}
+
+.content form .form-group button {
+    background-color:#ff7800;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 40px;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.content form .form-group button:hover {
+    background-color: #cd6000;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px;
+    font-size: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    font-weight: bold;
+    border-bottom: 2px solid transparent;
+}
+
+.tab.active {
+    color: #ff7800;
+    border-bottom: 2px solid #ff7800;
+}
+
+.tab-content {
+    padding-top: 20px;
+    min-height: 140px;
+}
+
+.tab-pane {
+    display: none;
+    min-height: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+.tab-pane p{
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    margin: 0;
+    padding: 20px 0;
+}
+
+.tab-pane#all-orders .continue-shopping {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.tab-pane:not(#all-orders) .continue-shopping {
+    display: none;
+}
+
+.order-list p {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+}
+/* Thanh tìm kiếm bên dưới các tab */
+.order-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.order-search input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.order-search button {
+    padding: 10px 20px;
+    background-color: #1e90ff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+/* Responsive adjustments */
+@media screen and (max-width: 1024px) {
+    .container {
+        width: 90%; /* Co lại một chút */
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+
+    .content {
+        padding: 20px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Chuyển từ hàng sang cột */
+        width: 95%;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 15px;
+    }
+
+    .tabs {
+        flex-direction: column; /* Tabs xếp thành cột */
+    }
+
+    .content {
+        padding: 20px;
+    }
+}
+
+/* Chỉnh sửa cho màn hình nhỏ */
+@media screen and (max-width: 480px) {
+    .sidebar ul li a {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .tabs button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .order-search input {
+        padding: 8px;
+    }
+
+    .order-search button {
+        padding: 8px 16px;
+    }
+}
+

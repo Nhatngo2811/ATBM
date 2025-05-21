@@ -1,0 +1,178 @@
+/* Toàn bộ bảng */
+table.dataTable {
+    width: 100%;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    border-spacing: 0 10px;
+    border-collapse: separate;
+}
+
+/* Header của bảng */
+table.dataTable thead th {
+    color: #333; /* Màu chữ đậm */
+    text-align: center; /* Căn giữa nội dung */
+    vertical-align: middle; /* Đảm bảo căn giữa theo chiều dọc */
+    padding: 12px;
+    font-size: 14px; /* Tăng kích thước chữ */
+    font-weight: bold;
+    text-transform: capitalize;
+    border-bottom: 2px solid #e7e7e7; /* Đường viền dưới dày hơn */
+    letter-spacing: 0.5px;
+}
+table.dataTable tbody td {
+    padding: 15px;
+    text-align: center; /* Căn giữa toàn bộ nội dung dữ liệu */
+    font-size: 13px;
+    color: #333;
+    vertical-align: middle; /* Đảm bảo căn giữa theo chiều dọc */
+}
+
+/* Các hàng trong bảng */
+table.dataTable tbody tr {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.3s ease-in-out;
+    padding: 15px;
+}
+
+table.dataTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* Màu xám nhạt hơn */
+}
+
+table.dataTable tbody tr:hover {
+    background-color: #ebebeb; /* Khi di chuột vào */
+}
+
+/* Ô dữ liệu */
+table.dataTable tbody td {
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+}
+
+
+/* Nút hành động */
+table.dataTable tbody td .btn-action {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #dcdcdc;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: background-color 0.2s ease;
+}
+
+table.dataTable tbody td .btn-action:hover {
+    background-color: #e0e0e0;
+    color: #000;
+}
+
+/* Phân trang */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 6px 10px;
+    margin: 2px;
+    background-color: #e0e0e0;
+    color: #fff;
+    border-radius: 4px;
+    border: 1px solid #dcdcdc;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: #d3d3d3;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background-color: #c7c7c7;
+    font-weight: bold;
+}
+
+/* Container tìm kiếm và dropdown */
+.dataTables_wrapper .dataTables_filter {
+    display: flex;
+    justify-content: flex-start; /* Đẩy tìm kiếm sang trái */
+    align-items: center;
+    margin-bottom: 20px;
+    float: left;
+}
+
+.dataTables_wrapper .dataTables_length {
+    display: none;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa label và dropdown */
+    margin-bottom: 10px;
+}
+
+/* Ô tìm kiếm */
+.dataTables_wrapper .dataTables_filter input {
+    padding: 8px 12px;
+    border: 1px solid #ccc; /* Màu viền nhạt */
+    border-radius: 20px; /* Bo góc tròn */
+    font-size: 14px;
+    width: 200px; /* Độ rộng vừa phải */
+    background-color: #fff; /* Màu nền trắng */
+    transition: all 0.3s ease; /* Hiệu ứng khi focus */
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #007bff; /* Màu viền xanh khi focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Hiệu ứng đổ bóng */
+    outline: none;
+}
+
+/* Label của filter */
+.dataTables_wrapper .dataTables_filter label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333; /* Màu chữ nhạt */
+}
+
+/* Dropdown menu */
+.dataTables_wrapper .dataTables_length select {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.dataTables_wrapper .dataTables_length select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Label của length */
+.dataTables_wrapper .dataTables_length label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-info {
+    background-color: #28a745; /* Màu xanh lá */
+    border: 1px solid #28a745;
+    transition: background-color 0.3s ease;
+}
+
+.btn-info:hover {
+    background-color: #218838; /* Màu xanh đậm hơn khi hover */
+}
+
