@@ -931,6 +931,9 @@
     }
 </script>
 
+<!-- User Menu (ẩn khi chưa đăng nhập) -->
+<jsp:include page="/includes/user-menu.jsp" />
+
 </body>
 
 </html>

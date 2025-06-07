@@ -127,6 +127,54 @@ public class InvoiceDao {
         return null;
     }
 
+    public List<Invoice> getInvoicesByUserId(int userId) {
+        List<Invoice> invoices = new ArrayList<>();
+        String sql = """
+            SELECT 
+                i.id_invoice,
+                c.customer_name,
+                i.receiver_name,
+                i.phone,
+                i.email,
+                i.address_full,
+                i.total_price,
+                i.shipping_fee,
+                i.payment_method,
+                i.status,
+                i.create_date
+            FROM invoices i
+            JOIN accounts a ON i.id_account = a.id_account
+            JOIN customers c ON a.id_customer = c.id_customer
+            WHERE i.id_account = ?
+            ORDER BY i.create_date DESC
+        """;
+
+        try (PreparedStatement ps = DbConnect.getPreparedStatement(sql, true)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setIdInvoice(rs.getInt("id_invoice"));
+                invoice.setAccountName(rs.getString("customer_name"));
+                invoice.setReceiverName(rs.getString("receiver_name"));
+                invoice.setPhone(rs.getString("phone"));
+                invoice.setEmail(rs.getString("email"));
+                invoice.setAddressFull(rs.getString("address_full"));
+                invoice.setTotalPrice(rs.getDouble("total_price"));
+                invoice.setShippingFee(rs.getDouble("shipping_fee"));
+                invoice.setPaymentMethod(rs.getString("payment_method"));
+                invoice.setStatus(rs.getString("status"));
+                invoice.setCreateDate(rs.getTimestamp("create_date"));
+                invoices.add(invoice);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Lỗi khi truy vấn danh sách hóa đơn của user:");
+            e.printStackTrace();
+        }
+
+        return invoices;
+    }
+
     public static void main(String[] args) {
         InvoiceDao dao = new InvoiceDao();
 
