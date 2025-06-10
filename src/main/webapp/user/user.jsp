@@ -138,6 +138,250 @@
             background-color: #aaa;
         }
 
+        .user-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .sidebar a:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .sidebar a i {
+            margin-right: 10px;
+            color: #ff6b00;
+        }
+        
+        .sidebar a.active {
+            background-color: #ff6b00;
+            color: white;
+        }
+        
+        .sidebar a.active i {
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .section h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #ff6b00;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #ff6b00;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e65c00;
+        }
+        
+        /* Styles cho phần quản lý đơn hàng */
+        .order-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .order-tab {
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #666;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .order-tab.active {
+            color: #ff6b00;
+        }
+        
+        .order-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #ff6b00;
+        }
+        
+        .order-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .order-search input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .order-search button {
+            padding: 8px 16px;
+            background-color: #ff6b00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .order-search button:hover {
+            background-color: #e65c00;
+        }
+        
+        .order-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .order-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-id {
+            font-weight: bold;
+            color: #ff6b00;
+        }
+        
+        .order-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-processing {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .order-info {
+            margin-bottom: 10px;
+        }
+        
+        .order-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+        
+        .order-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-view {
+            background-color: #007bff;
+        }
+        
+        .btn-print {
+            background-color: #28a745;
+        }
     </style>
 </head>
 
@@ -293,7 +537,11 @@
         </div>
         <ul>
             <li><a class="active" href="#" onclick="showSection('account-info', this)"><i class="fas fa-user"></i> Thông tin tài khoản</a></li>
-            <li><a href="#" onclick="showSection('order-management', this)"><i class="fas fa-box"></i> Quản lý đơn hàng</a></li>
+            <li>
+                <a href="/project_fruit/user/orders" onclick="setActive(this)">
+                    <i class="fas fa-box"></i> Quản lí đơn hàng
+                </a>
+            </li>
             <li><a href="#" onclick="showSection('recent-viewed', this)"><i class="fas fa-clock"></i> Sản phẩm đã xem</a></li>
             <li><a href="#" onclick="showSection('change-password', this)"><i class="fas fa-key"></i> Đổi Mật Khẩu</a></li>
             <li>
@@ -346,44 +594,8 @@
         </div>
 
         <!-- Quản lý đơn hàng -->
-        <div id="order-management" class="section">
-            <h2>Quản Lý Đơn Hàng</h2>
-            <div class="tabs">
-                <button onclick="showTab('all-orders')" class="tab active">Tất cả</button>
-                <button onclick="showTab('new-orders')" class="tab">Mới</button>
-                <button onclick="showTab('processing-orders')" class="tab">Đang xử lý</button>
-                <button onclick="showTab('shipping-orders')" class="tab">Đang vận chuyển</button>
-                <button onclick="showTab('completed-orders')" class="tab">Hoàn thành</button>
-                <button onclick="showTab('cancelled-orders')" class="tab">Hủy</button>
-            </div>
 
-            <div class="order-search">
-                <input type="text" placeholder="Tìm đơn hàng theo Mã đơn hàng..." id="orderSearchInput">
-                <button onclick="searchOrders()">Tìm đơn hàng</button>
-            </div>
 
-            <div class="tab-content">
-                <div id="all-orders" class="tab-pane active">
-                    <p>Quý khách chưa có đơn hàng nào.</p>
-                </div>
-                <div id="new-orders" class="tab-pane">
-                    <p>Không có đơn hàng mới.</p>
-                </div>
-                <div id="processing-orders" class="tab-pane">
-                    <p>Không có đơn hàng đang xử lý.</p>
-                </div>
-                <div id="shipping-orders" class="tab-pane">
-                    <p>Không có đơn hàng đang vận chuyển.</p>
-                </div>
-                <div id="completed-orders" class="tab-pane">
-                    <p>Không có đơn hàng hoàn thành.</p>
-                </div>
-                <div id="cancelled-orders" class="tab-pane">
-                    <p>Không có đơn hàng bị hủy.</p>
-                </div>
-            </div>
-        </div>
-<%--        Xem gần đây--%>
         <!-- Sản phẩm đã xem gần đây -->
         <div id="recent-viewed" class="section">
             <h2>Sản phẩm đã xem gần đây</h2>
@@ -410,7 +622,8 @@
                 </c:choose>
             </div>
         </div>
-    <%-- Đổi mật khẩu--%>
+
+        <!-- Đổi mật khẩu -->
         <div id="change-password" class="section">
             <h2>Đổi Mật Khẩu</h2>
             <form action="${pageContext.request.contextPath}/change-password" method="post" class="change-password-form">
@@ -433,8 +646,6 @@
         </div>
     </div>
 </div>
-
-
 
 <!-- footer -->
 <section class="footer">
@@ -511,6 +722,30 @@
     document.getElementById("logoutBtn").addEventListener("click", function (e) {
         e.preventDefault();
         document.getElementById("logoutOverlay").style.display = "flex";
+    });
+</script>
+<script>
+    function filterOrders(status) {
+        // Cập nhật trạng thái active của tab
+        document.querySelectorAll('.order-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        // TODO: Thêm logic lọc đơn hàng theo trạng thái
+    }
+    
+    function searchOrders() {
+        const searchTerm = document.getElementById('orderSearchInput').value;
+        // TODO: Thêm logic tìm kiếm đơn hàng
+    }
+    
+    // Kiểm tra URL hash khi tải trang
+    window.addEventListener('load', () => {
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+            showSection(hash);
+        }
     });
 </script>
 </body>
