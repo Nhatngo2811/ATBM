@@ -175,48 +175,24 @@ public class InvoiceDao {
         return invoices;
     }
 
-    public static void main(String[] args) {
-        InvoiceDao dao = new InvoiceDao();
 
-        // 1️⃣ Lấy toàn bộ đơn hàng
-        List<Invoice> invoices = dao.getAllInvoices();
-        System.out.println("📋 Danh sách đơn hàng:");
-        for (Invoice invoice : invoices) {
-            System.out.println("---------------");
-            System.out.println("🆔 Mã đơn hàng: " + invoice.getIdInvoice());
-            System.out.println("👤 Tài khoản đặt hàng: " + invoice.getAccountName());
-            System.out.println("📞 SĐT người nhận: " + invoice.getPhone());
-            System.out.println("📧 Email: " + invoice.getEmail());
-            System.out.println("📦 Thanh toán: " + invoice.getPaymentMethod());
-            System.out.println("📍 Địa chỉ: " + invoice.getAddressFull());
-            System.out.println("💰 Tổng tiền: " + invoice.getTotalPrice());
-            System.out.println("📅 Ngày tạo: " + invoice.getCreateDate());
-            System.out.println("🪧 Trạng thái: " + invoice.getStatus());
-        }
-
-        // 2️⃣ Lấy thông tin chi tiết đơn hàng đầu tiên (nếu có)
-        if (!invoices.isEmpty()) {
-            int invoiceId = invoices.get(0).getIdInvoice();
-            System.out.println("\n🔍 Kiểm tra chi tiết đơn hàng với ID = " + invoiceId);
-            Invoice invoiceDetail = InvoiceDao.getInvoiceById(invoiceId);
-
-            if (invoiceDetail != null) {
-                System.out.println("✅ Đã tìm thấy chi tiết đơn:");
-                System.out.println("🆔 Mã đơn hàng: " + invoiceDetail.getIdInvoice());
-                System.out.println("👤 Người đặt: " + invoiceDetail.getAccountName());
-                System.out.println("📞 SĐT: " + invoiceDetail.getPhone());
-                System.out.println("📧 Email: " + invoiceDetail.getEmail());
-                System.out.println("📦 Thanh toán: " + invoiceDetail.getPaymentMethod());
-                System.out.println("📍 Địa chỉ: " + invoiceDetail.getAddressFull());
-                System.out.println("💰 Tổng tiền: " + invoiceDetail.getTotalPrice());
-                System.out.println("📅 Ngày tạo: " + invoiceDetail.getCreateDate());
-                System.out.println("🪧 Trạng thái: " + invoiceDetail.getStatus());
-            } else {
-                System.out.println("❌ Không tìm thấy đơn hàng có ID = " + invoiceId);
-            }
-        } else {
-            System.out.println("❌ Không có đơn hàng nào để kiểm tra chi tiết.");
-        }
+    public static String invoiceToText(Invoice invoice) {
+        if (invoice == null) return "";
+        return invoice.getIdInvoice()
+                + "|" + invoice.getAccountName()
+                + "|" + invoice.getReceiverName()
+                + "|" + invoice.getPhone()
+                + "|" + invoice.getEmail()
+                + "|" + invoice.getAddressFull()
+                + "|" + invoice.getPaymentMethod()
+                + "|" + invoice.getShippingFee()
+                + "|" + invoice.getTotalPrice();
     }
 
+    public static void main(String[] args) {
+        Invoice invoice = getInvoiceById(46);
+        String text = invoiceToText(invoice);
+        System.out.println(text);
+
+    }
 }
