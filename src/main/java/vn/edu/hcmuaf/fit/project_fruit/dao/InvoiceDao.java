@@ -190,7 +190,7 @@ public class InvoiceDao {
     }
 
     public static void main(String[] args) {
-        Invoice invoice = getInvoiceById(46);
+        Invoice invoice = getInvoiceById(56);
         String text = invoiceToText(invoice);
         System.out.println(text);
 

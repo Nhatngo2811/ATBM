@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -263,6 +264,16 @@
         color: white;
     }
 
+    .btn-uploadKey {
+        background-color: #ffa700;
+        color: white;
+    }
+
+    .uploadKey {
+        margin-bottom: 10px;
+        text-align: right;
+    }
+
     .btn:hover {
         opacity: 0.9;
     }
@@ -279,7 +290,164 @@
 <jsp:include page="/includes/header.jsp"/>
 
 <div class="orders-container">
-    <h1>Quản lý đơn hàng</h1>
+    <h1 style="text-align: left">Quản lý đơn hàng</h1>
+
+    <div class="uploadKey">
+
+        <button class="btn btn-uploadKey">Tải khóa public</button>
+        <div class="upload-key-overlay"></div>
+        <div class="upload-key-popup">
+            <h3>Tải lên khóa public</h3>
+            <form id="uploadKeyForm" enctype="multipart/form-data">
+                <input type="file" name="publicKeyFile" required/>
+                <div style="margin-top: 16px;">
+                    <button type="submit" class="btn btn-primary">Tải lên</button>
+                    <button type="button" class="btn btn-secondary btn-close-upload">Đóng</button>
+                </div>
+            </form>
+            <div id="uploadKeyResult" style="margin-top: 12px; color: green"></div>
+        </div>
+        <style>
+            .upload-key-overlay {
+                display: none;
+                position: fixed; z-index: 9990;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(44, 62, 80, 0.25);
+                transition: opacity 0.25s;
+            }
+            .upload-key-popup {
+                display: none;
+                position: fixed; z-index: 10000;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);
+                background: #fff;
+                padding: 32px 32px 22px 32px;
+                border-radius: 18px;
+                box-shadow: 0 8px 36px rgba(25, 118, 210, 0.20), 0 1.5px 10px rgba(44,62,80,0.06);
+                min-width: 330px; max-width: 92vw;
+                text-align: center;
+                border: 1.5px solid #1976d2;
+            }
+
+            .upload-key-popup h3 {
+                font-size: 18px;
+                font-weight: 600;
+                color: #1976d2;
+                margin-bottom: 18px;
+                margin-top: 0;
+                letter-spacing: 0.5px;
+            }
+
+            .upload-key-popup input[type="file"] {
+                width: 90%;
+                font-size: 14px;
+                margin: 0 auto 8px 80px;
+                display: block;
+                border: none;
+                background: none;
+                padding: 7px 0;
+            }
+
+            .upload-key-popup .btn {
+                min-width: 90px;
+                padding: 9px 0;
+                font-size: 15px;
+                border-radius: 8px;
+                border: none;
+                font-weight: 500;
+                margin: 0 6px;
+                cursor: pointer;
+                transition: background 0.2s, color 0.2s;
+            }
+            .upload-key-popup .btn-primary {
+                background: #1976d2;
+                color: #fff;
+            }
+            .upload-key-popup .btn-primary:hover {
+                background: #145ea8;
+            }
+            .upload-key-popup .btn-secondary {
+                background: #f2f6fa;
+                color: #1a237e;
+                border: 1.2px solid #d6e1ed;
+            }
+            .upload-key-popup .btn-secondary:hover {
+                background: #e3eafd;
+            }
+
+            #uploadKeyResult {
+                margin-top: 12px;
+                font-size: 15px;
+                color: #388e3c;
+                font-weight: 500;
+                min-height: 18px;
+                text-align: center;
+            }
+
+        </style>
+        <script>
+            const accountId = "${sessionScope.account.id_account}";
+            console.log("accountId từ session:", accountId);
+        </script>
+
+        <script>
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // Mở popup
+                document.querySelector('.btn.btn-uploadKey').addEventListener('click', function () {
+                    document.querySelector('.upload-key-overlay').style.display = 'block';
+                    document.querySelector('.upload-key-popup').style.display = 'block';
+                    document.getElementById('uploadKeyResult').innerText = '';
+                    document.getElementById('uploadKeyForm').reset();
+                });
+
+                // Đóng popup
+                document.querySelector('.btn-close-upload').onclick =
+                    document.querySelector('.upload-key-overlay').onclick = function () {
+                        document.querySelector('.upload-key-overlay').style.display = 'none';
+                        document.querySelector('.upload-key-popup').style.display = 'none';
+                    };
+
+                // Submit form
+                document.getElementById('uploadKeyForm').onsubmit = function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    formData.append("accountId", accountId); // ✅ Gửi kèm accountId
+
+                    fetch('<%= request.getContextPath() %>/upload-public-key', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(res => {
+                            console.log('📥 Server response status:', res.status);
+                            return res.text(); // đọc response dạng text để debug dễ hơn
+                        })
+                        .then(text => {
+                            console.log('📦 Raw response text:', text);
+                            let result;
+                            try {
+                                result = JSON.parse(text);
+                                console.log('✅ Parsed JSON:', result);
+                            } catch (e) {
+                                console.error('❌ Lỗi parse JSON:', e);
+                                document.getElementById('uploadKeyResult').innerText = "Phản hồi không hợp lệ từ server!";
+                                return;
+                            }
+
+                            // Hiển thị kết quả
+                            document.getElementById('uploadKeyResult').innerText =
+                                result.success ? "✅ " + result.message : "❌ " + result.message;
+                        })
+                        .catch(error => {
+                            console.error('❌ Lỗi khi gửi fetch:', error);
+                            document.getElementById('uploadKeyResult').innerText = "Lỗi khi upload file!";
+                        });
+                };
+            });
+        </script>
+
+    </div>
 
     <c:if test="${empty userInvoices}">
         <div class="empty-orders">
@@ -287,7 +455,6 @@
             <p>Bạn chưa có đơn hàng nào</p>
         </div>
     </c:if>
-
     <c:forEach var="invoice" items="${userInvoices}">
         <div class="order-card">
             <div class="order-header">
@@ -314,7 +481,7 @@
             </div>
 
             <div class="order-actions">
-                <button class="btn btn-view" onclick="viewOrderDetails(${invoice.idInvoice})">
+                <button class="btn btn-view" onclick="viewOrderDetails('${invoice.idInvoice}')">
                     <i class="fas fa-eye"></i> Xem chi tiết
                 </button>
                 <button class="btn btn-print"
@@ -481,12 +648,68 @@
                             });
                         });
                     });
-
                 </script>
             </div>
         </div>
     </c:forEach>
 </div>
+
+<!-- Script xác thực chữ ký, chỉ gửi chữ ký và mã đơn hàng lên server -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.btn-order-verify-submit').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                // Lấy popup và input liên quan
+                const popup = btn.closest('.order-verification-popup');
+                const signatureBase64 = popup.querySelector('.input-verify-order').value.trim();
+                // Lấy orderId từ button xác thực đơn hàng (cùng block)
+                const orderBtn = popup.previousElementSibling.previousElementSibling;
+                const orderId = orderBtn ? orderBtn.getAttribute('data-orderid') : null;
+
+                console.log('Debug - Signature:', signatureBase64);
+                console.log('Debug - OrderId:', orderId);
+
+                if (!signatureBase64) {
+                    alert('Vui lòng nhập chữ ký!');
+                    return;
+                }
+                if (!orderId) {
+                    alert('Không tìm thấy mã đơn hàng!');
+                    return;
+                }
+
+                const requestData = {
+                    signature: signatureBase64,
+                    invoiceId: parseInt(orderId)
+                };
+
+                console.log('Debug - Request data:', requestData);
+
+                fetch('/project_fruit/verify-invoice-signature', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestData)
+                })
+                .then(res => {
+                    console.log('Debug - Response status:', res.status);
+                    return res.json();
+                })
+                .then(data => {
+                    console.log('Debug - Response data:', data);
+                    if(data.success && data.valid) {
+                        alert('Xác thực thành công!');
+                    } else {
+                        alert('Sai hoặc chữ ký không hợp lệ! Chi tiết: ' + (data.message || 'Không có thông tin lỗi'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Debug - Error:', error);
+                    alert('Lỗi khi xác thực: ' + error.message);
+                });
+            });
+        });
+    });
+</script>
 
 <script>
     function viewOrderDetails(orderId) {
