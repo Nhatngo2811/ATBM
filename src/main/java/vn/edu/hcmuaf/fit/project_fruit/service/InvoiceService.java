@@ -27,7 +27,7 @@ public class InvoiceService {
         invoice.setShippingMethod(shippingMethod);
         invoice.setTotalPrice(totalPrice);
         invoice.setShippingFee(shippingFee);
-        invoice.setStatus("Chưa thanh toán");
+        invoice.setStatus("Đang chờ xác thực");
 
         int invoiceId = invoiceDao.addInvoice(invoice);
 

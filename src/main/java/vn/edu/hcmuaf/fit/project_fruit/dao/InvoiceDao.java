@@ -3,6 +3,7 @@ package vn.edu.hcmuaf.fit.project_fruit.dao;
 import vn.edu.hcmuaf.fit.project_fruit.dao.db.DbConnect;
 import vn.edu.hcmuaf.fit.project_fruit.dao.model.Invoice;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -187,6 +188,15 @@ public class InvoiceDao {
                 + "|" + invoice.getPaymentMethod()
                 + "|" + invoice.getShippingFee()
                 + "|" + invoice.getTotalPrice();
+    }
+    public static void updateInvoiceStatus(int invoiceId, String newStatus) throws SQLException {
+        String sql = "UPDATE invoices SET status = ? WHERE id_invoice = ?";
+        try (Connection conn = DbConnect.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, newStatus);
+            stmt.setInt(2, invoiceId);
+            stmt.executeUpdate();
+        }
     }
 
     public static void main(String[] args) {

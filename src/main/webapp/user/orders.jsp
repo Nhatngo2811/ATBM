@@ -1,7 +1,8 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -283,6 +284,11 @@
         padding: 50px;
         color: #666;
     }
+
+    .btn-changeKey {
+        background-color: #ffa700;
+        color: white;
+    }
 </style>
 </head>
 <body>
@@ -292,161 +298,370 @@
 <div class="orders-container">
     <h1 style="text-align: left">Quản lý đơn hàng</h1>
 
-    <div class="uploadKey">
+    <div class="key-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px;">
+        <div class="uploadKey">
 
-        <button class="btn btn-uploadKey">Tải khóa public</button>
-        <div class="upload-key-overlay"></div>
-        <div class="upload-key-popup">
-            <h3>Tải lên khóa public</h3>
-            <form id="uploadKeyForm" enctype="multipart/form-data">
-                <input type="file" name="publicKeyFile" required/>
-                <div style="margin-top: 16px;">
-                    <button type="submit" class="btn btn-primary">Tải lên</button>
-                    <button type="button" class="btn btn-secondary btn-close-upload">Đóng</button>
-                </div>
-            </form>
-            <div id="uploadKeyResult" style="margin-top: 12px; color: green"></div>
+            <button class="btn btn-uploadKey">Tải khóa public</button>
+            <div class="upload-key-overlay"></div>
+            <div class="upload-key-popup">
+                <h3>Tải lên khóa public</h3>
+                <form id="uploadKeyForm" enctype="multipart/form-data">
+                    <input type="file" name="publicKeyFile" required/>
+                    <div style="margin-top: 16px;">
+                        <button type="submit" class="btn btn-primary">Tải lên</button>
+                        <button type="button" class="btn btn-secondary btn-close-upload">Đóng</button>
+                    </div>
+                </form>
+                <div id="uploadKeyResult" style="margin-top: 12px; color: green"></div>
+            </div>
+            <style>
+                .upload-key-overlay {
+                    display: none;
+                    position: fixed;
+                    z-index: 9990;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(44, 62, 80, 0.25);
+                    transition: opacity 0.25s;
+                }
+
+                .upload-key-popup {
+                    display: none;
+                    position: fixed;
+                    z-index: 10000;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #fff;
+                    padding: 32px 32px 22px 32px;
+                    border-radius: 18px;
+                    box-shadow: 0 8px 36px rgba(25, 118, 210, 0.20), 0 1.5px 10px rgba(44, 62, 80, 0.06);
+                    min-width: 330px;
+                    max-width: 92vw;
+                    text-align: center;
+                    border: 1.5px solid #1976d2;
+                }
+
+                .upload-key-popup h3 {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #1976d2;
+                    margin-bottom: 18px;
+                    margin-top: 0;
+                    letter-spacing: 0.5px;
+                }
+
+                .upload-key-popup input[type="file"] {
+                    width: 90%;
+                    font-size: 14px;
+                    margin: 0 auto 8px 80px;
+                    display: block;
+                    border: none;
+                    background: none;
+                    padding: 7px 0;
+                }
+
+                .upload-key-popup .btn {
+                    min-width: 90px;
+                    padding: 9px 0;
+                    font-size: 15px;
+                    border-radius: 8px;
+                    border: none;
+                    font-weight: 500;
+                    margin: 0 6px;
+                    cursor: pointer;
+                    transition: background 0.2s, color 0.2s;
+                }
+
+                .upload-key-popup .btn-primary {
+                    background: #1976d2;
+                    color: #fff;
+                }
+
+                .upload-key-popup .btn-primary:hover {
+                    background: #145ea8;
+                }
+
+                .upload-key-popup .btn-secondary {
+                    background: #f2f6fa;
+                    color: #1a237e;
+                    border: 1.2px solid #d6e1ed;
+                }
+
+                .upload-key-popup .btn-secondary:hover {
+                    background: #e3eafd;
+                }
+
+                #uploadKeyResult {
+                    margin-top: 12px;
+                    font-size: 15px;
+                    color: #388e3c;
+                    font-weight: 500;
+                    min-height: 18px;
+                    text-align: center;
+                }
+
+            </style>
+            <script>
+                const accountId = "${sessionScope.account.id_account}";
+                console.log("accountId từ session:", accountId);
+            </script>
+
+            <script>
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Mở popup
+                    document.querySelector('.btn.btn-uploadKey').addEventListener('click', function () {
+                        document.querySelector('.upload-key-overlay').style.display = 'block';
+                        document.querySelector('.upload-key-popup').style.display = 'block';
+                        document.getElementById('uploadKeyResult').innerText = '';
+                        document.getElementById('uploadKeyForm').reset();
+                    });
+
+                    // Đóng popup
+                    document.querySelector('.btn-close-upload').onclick =
+                        document.querySelector('.upload-key-overlay').onclick = function () {
+                            document.querySelector('.upload-key-overlay').style.display = 'none';
+                            document.querySelector('.upload-key-popup').style.display = 'none';
+                        };
+
+                    // Submit form
+                    document.getElementById('uploadKeyForm').onsubmit = function (e) {
+                        e.preventDefault();
+
+                        const formData = new FormData(this);
+                        formData.append("accountId", accountId); // ✅ Gửi kèm accountId
+
+                        fetch('<%= request.getContextPath() %>/upload-public-key', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(res => {
+                                console.log('📥 Server response status:', res.status);
+                                return res.text(); // đọc response dạng text để debug dễ hơn
+                            })
+                            .then(text => {
+                                console.log('📦 Raw response text:', text);
+                                let result;
+                                try {
+                                    result = JSON.parse(text);
+                                    console.log('✅ Parsed JSON:', result);
+                                } catch (e) {
+                                    console.error('❌ Lỗi parse JSON:', e);
+                                    document.getElementById('uploadKeyResult').innerText = "Phản hồi không hợp lệ từ server!";
+                                    return;
+                                }
+
+                                // Hiển thị kết quả
+                                document.getElementById('uploadKeyResult').innerText =
+                                    result.success ? "✅ " + result.message : "❌ " + result.message;
+                            })
+                            .catch(error => {
+                                console.error('❌ Lỗi khi gửi fetch:', error);
+                                document.getElementById('uploadKeyResult').innerText = "Lỗi khi upload file!";
+                            });
+                    };
+                });
+            </script>
+
         </div>
-        <style>
-            .upload-key-overlay {
-                display: none;
-                position: fixed; z-index: 9990;
-                top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(44, 62, 80, 0.25);
-                transition: opacity 0.25s;
-            }
-            .upload-key-popup {
-                display: none;
-                position: fixed; z-index: 10000;
-                top: 50%; left: 50%;
-                transform: translate(-50%, -50%);
-                background: #fff;
-                padding: 32px 32px 22px 32px;
-                border-radius: 18px;
-                box-shadow: 0 8px 36px rgba(25, 118, 210, 0.20), 0 1.5px 10px rgba(44,62,80,0.06);
-                min-width: 330px; max-width: 92vw;
-                text-align: center;
-                border: 1.5px solid #1976d2;
-            }
 
-            .upload-key-popup h3 {
-                font-size: 18px;
-                font-weight: 600;
-                color: #1976d2;
-                margin-bottom: 18px;
-                margin-top: 0;
-                letter-spacing: 0.5px;
-            }
+        <div class="changeKey">
+            <button class="btn btn-changeKey" onclick="openChangeKeyPopup()">Đổi khóa mới</button>
 
-            .upload-key-popup input[type="file"] {
-                width: 90%;
-                font-size: 14px;
-                margin: 0 auto 8px 80px;
-                display: block;
-                border: none;
-                background: none;
-                padding: 7px 0;
-            }
+            <div id="popup-changeKey" class="popup-overlay">
+                <div class="popup-content">
+                    <h2 class="popup-title">🔑 Nhập Khóa Mới</h2>
 
-            .upload-key-popup .btn {
-                min-width: 90px;
-                padding: 9px 0;
-                font-size: 15px;
-                border-radius: 8px;
-                border: none;
-                font-weight: 500;
-                margin: 0 6px;
-                cursor: pointer;
-                transition: background 0.2s, color 0.2s;
-            }
-            .upload-key-popup .btn-primary {
-                background: #1976d2;
-                color: #fff;
-            }
-            .upload-key-popup .btn-primary:hover {
-                background: #145ea8;
-            }
-            .upload-key-popup .btn-secondary {
-                background: #f2f6fa;
-                color: #1a237e;
-                border: 1.2px solid #d6e1ed;
-            }
-            .upload-key-popup .btn-secondary:hover {
-                background: #e3eafd;
-            }
+                    <div class="popup-body">
+                        <div class="form-group">
+                            <label for="publicKeyFile">Chọn file Public Key (.pem hoặc .txt)</label>
+                            <input type="file" id="publicKeyFile" accept=".pem,.txt" />
+                        </div>
 
-            #uploadKeyResult {
-                margin-top: 12px;
-                font-size: 15px;
-                color: #388e3c;
-                font-weight: 500;
-                min-height: 18px;
-                text-align: center;
-            }
+                        <div class="form-group">
+                            <label for="otpCode">Mã OTP</label>
+                            <input type="text" id="otpCode" maxlength="6" placeholder="Nhập mã OTP" />
+                            <button type="button" class="btn-send-otp" onclick="sendOtp()">Gửi OTP</button>
+                        </div>
 
-        </style>
-        <script>
-            const accountId = "${sessionScope.account.id_account}";
-            console.log("accountId từ session:", accountId);
-        </script>
+                        <div class="popup-actions">
+                            <button type="button" class="btn-cancel" onclick="closeChangeKeyPopup()">Hủy</button>
+                            <button type="button" class="btn-save" onclick="submitChangeKey()">Lưu</button>
+                        </div>
 
-        <script>
+                        <div id="changeKeyMessage" style="margin-top: 10px; font-weight: 500;"></div>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .btn-send-otp {
+                    margin-top: 8px;
+                    background-color: #e3f2fd;
+                    color: #1976d2;
+                    font-size: 14px;
+                    border: 1px solid #bbdefb;
+                    border-radius: 6px;
+                    padding: 6px 12px;
+                    cursor: pointer;
+                }
+                .btn-send-otp:hover {
+                    background-color: #bbdefb;
+                }
 
-            document.addEventListener('DOMContentLoaded', function () {
-                // Mở popup
-                document.querySelector('.btn.btn-uploadKey').addEventListener('click', function () {
-                    document.querySelector('.upload-key-overlay').style.display = 'block';
-                    document.querySelector('.upload-key-popup').style.display = 'block';
-                    document.getElementById('uploadKeyResult').innerText = '';
-                    document.getElementById('uploadKeyForm').reset();
+                .popup-overlay {
+                    position: fixed;
+                    top: 0; left: 0;
+                    width: 100vw; height: 100vh;
+                    background-color: rgba(44, 62, 80, 0.25);
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                }
+
+                .popup-content {
+                    background-color: #fff;
+                    padding: 32px;
+                    border-radius: 18px;
+                    border: 1.5px solid #1976d2;
+                    box-shadow: 0 8px 36px rgba(25, 118, 210, 0.2), 0 1.5px 10px rgba(44, 62, 80, 0.06);
+                    min-width: 350px;
+                    max-width: 92vw;
+                }
+
+                .popup-title {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #1976d2;
+                    margin-top: 0;
+                    margin-bottom: 20px;
+                }
+
+                .form-group {
+                    margin-bottom: 20px;
+                }
+
+                .form-group label {
+                    display: block;
+                    font-weight: 500;
+                    color: #333;
+                    margin-bottom: 6px;
+                }
+
+                .form-group input {
+                    width: 100%;
+                    padding: 10px 12px;
+                    font-size: 15px;
+                    border: 1px solid #ccc;
+                    border-radius: 6px;
+                }
+
+                .popup-actions {
+                    text-align: right;
+                }
+
+                .btn-cancel, .btn-save {
+                    padding: 9px 14px;
+                    font-size: 15px;
+                    border-radius: 8px;
+                    border: none;
+                    font-weight: 500;
+                    margin-left: 8px;
+                    cursor: pointer;
+                    transition: background 0.2s;
+                }
+
+                .btn-cancel {
+                    background: #f2f6fa;
+                    color: #1a237e;
+                    border: 1.2px solid #d6e1ed;
+                }
+                .btn-cancel:hover {
+                    background: #e3eafd;
+                }
+
+                .btn-save {
+                    background-color: #1976d2;
+                    color: white;
+                }
+                .btn-save:hover {
+                    background-color: #145ea8;
+                }
+            </style>
+            <script>
+                function openChangeKeyPopup() {
+                    document.getElementById("popup-changeKey").style.display = "flex";
+                }
+
+                function closeChangeKeyPopup() {
+                    document.getElementById("popup-changeKey").style.display = "none";
+                }
+            </script>
+            <script>
+                let publicKeyContent = "";
+
+                // Đọc nội dung file khi người dùng chọn
+                document.getElementById("publicKeyFile").addEventListener("change", function (e) {
+                    const file = e.target.files[0];
+                    if (!file) {
+                        publicKeyContent = "";
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        publicKeyContent = event.target.result.trim();
+                    };
+                    reader.readAsText(file);
                 });
 
-                // Đóng popup
-                document.querySelector('.btn-close-upload').onclick =
-                    document.querySelector('.upload-key-overlay').onclick = function () {
-                        document.querySelector('.upload-key-overlay').style.display = 'none';
-                        document.querySelector('.upload-key-popup').style.display = 'none';
-                    };
-
-                // Submit form
-                document.getElementById('uploadKeyForm').onsubmit = function (e) {
-                    e.preventDefault();
-
-                    const formData = new FormData(this);
-                    formData.append("accountId", accountId); // ✅ Gửi kèm accountId
-
-                    fetch('<%= request.getContextPath() %>/upload-public-key', {
-                        method: 'POST',
-                        body: formData
+                function sendOtp() {
+                    fetch('/project_fruit/send-otp-change-key', {
+                        method: 'POST'
                     })
-                        .then(res => {
-                            console.log('📥 Server response status:', res.status);
-                            return res.text(); // đọc response dạng text để debug dễ hơn
+                        .then(res => res.text())
+                        .then(msg => {
+                            document.getElementById("changeKeyMessage").innerText = "📧 " + msg;
                         })
-                        .then(text => {
-                            console.log('📦 Raw response text:', text);
-                            let result;
-                            try {
-                                result = JSON.parse(text);
-                                console.log('✅ Parsed JSON:', result);
-                            } catch (e) {
-                                console.error('❌ Lỗi parse JSON:', e);
-                                document.getElementById('uploadKeyResult').innerText = "Phản hồi không hợp lệ từ server!";
-                                return;
-                            }
-
-                            // Hiển thị kết quả
-                            document.getElementById('uploadKeyResult').innerText =
-                                result.success ? "✅ " + result.message : "❌ " + result.message;
-                        })
-                        .catch(error => {
-                            console.error('❌ Lỗi khi gửi fetch:', error);
-                            document.getElementById('uploadKeyResult').innerText = "Lỗi khi upload file!";
+                        .catch(() => {
+                            document.getElementById("changeKeyMessage").innerText = "❌ Không gửi được mã OTP.";
                         });
-                };
-            });
-        </script>
+                }
 
+                function submitChangeKey() {
+                    const otpCode = document.getElementById("otpCode").value.trim();
+
+                    if (!publicKeyContent || !otpCode) {
+                        document.getElementById("changeKeyMessage").innerText = "⚠️ Vui lòng chọn file public key và nhập mã OTP.";
+                        return;
+                    }
+
+                    fetch('/project_fruit/change-public-key', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ publicKey: publicKeyContent, otpCode })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            document.getElementById("changeKeyMessage").innerText = data.message;
+                            if (data.success) {
+                                publicKeyContent = "";
+                                document.getElementById("publicKeyFile").value = "";
+                                document.getElementById("otpCode").value = "";
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1500);
+                            }
+                        })
+                        .catch(() => {
+                            document.getElementById("changeKeyMessage").innerText = "❌ Lỗi hệ thống.";
+                        });
+                }
+            </script>
+        </div>
     </div>
 
     <c:if test="${empty userInvoices}">
@@ -473,11 +688,11 @@
             </div>
 
             <div class="order-details">
-                <p><strong>Ngày đặt:</strong> <fmt:formatDate value="${invoice.createDate}" pattern="dd/MM/yyyy HH:mm"/>
-                </p>
+                <p><strong>Ngày đặt:</strong> <fmt:formatDate value="${invoice.createDate}" pattern="dd/MM/yyyy"/></p>
                 <p><strong>Người nhận:</strong> ${invoice.receiverName}</p>
                 <p><strong>Địa chỉ:</strong> ${invoice.addressFull}</p>
-                <p><strong>Tổng tiền:</strong> <fmt:formatNumber value="${invoice.totalPrice}" pattern="#,###"/> đ</p>
+                <p><strong>Tổng tiền:</strong> <fmt:formatNumber value="${invoice.totalPrice}" type="number"
+                                                                 groupingUsed="true" pattern="#,##0.0"/> đ</p>
             </div>
 
             <div class="order-actions">
@@ -488,7 +703,13 @@
                         onclick="window.location.href='${pageContext.request.contextPath}/user/view-invoice?id=${invoice.idInvoice}'">
                     <i class="fas fa-print"></i> In hóa đơn
                 </button>
-                <button class="btn btn-verifyInvoice" data-orderid="${invoice.idInvoice}">Xác Thực Đơn Hàng</button>
+                <button
+                        class="btn btn-verifyInvoice"
+                        data-orderid="${invoice.idInvoice}"
+                        <c:if test="${invoice.status eq 'Đã xác thực'}">disabled
+                        style="opacity: 0.6; cursor: not-allowed;"</c:if>>
+                    Xác Thực Đơn Hàng
+                </button>
                 <div class="order-verification-overlay"></div>
                 <div class="order-verification-popup">
                     <label>Nhập Chữ kí để xác thực đơn hàng #${invoice.idInvoice}:</label>
@@ -687,25 +908,26 @@
 
                 fetch('/project_fruit/verify-invoice-signature', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(requestData)
                 })
-                .then(res => {
-                    console.log('Debug - Response status:', res.status);
-                    return res.json();
-                })
-                .then(data => {
-                    console.log('Debug - Response data:', data);
-                    if(data.success && data.valid) {
-                        alert('Xác thực thành công!');
-                    } else {
-                        alert('Sai hoặc chữ ký không hợp lệ! Chi tiết: ' + (data.message || 'Không có thông tin lỗi'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Debug - Error:', error);
-                    alert('Lỗi khi xác thực: ' + error.message);
-                });
+                    .then(res => {
+                        console.log('Debug - Response status:', res.status);
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log('Debug - Response data:', data);
+                        if (data.success && data.valid) {
+                            alert('Xác thực thành công!');
+                            window.location.reload();
+                        } else {
+                            alert('Sai hoặc chữ ký không hợp lệ! Chi tiết: ' + (data.message || 'Không có thông tin lỗi'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Debug - Error:', error);
+                        alert('Lỗi khi xác thực: ' + error.message);
+                    });
             });
         });
     });
