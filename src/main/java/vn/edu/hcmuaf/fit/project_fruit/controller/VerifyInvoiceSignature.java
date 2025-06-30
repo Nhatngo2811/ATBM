@@ -86,11 +86,14 @@ public class VerifyInvoiceSignature extends HttpServlet {
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.DECRYPT_MODE, pubKey);
             byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(signature));
-            String decryptedHash = bytesToHex(decryptedBytes);
             String decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
 
 
             boolean valid = realHash.equalsIgnoreCase(decryptedText);
+            if (valid) {
+                InvoiceDao.updateInvoiceStatus(invoiceId, "Đã xác thực");
+                System.out.println("🔄 Đã cập nhật trạng thái đơn hàng #" + invoiceId + " thành 'Đã xác thực'");
+            }
 
             // 🧾 Ghi log
             System.out.println("========== KIỂM TRA CHỮ KÝ ==========");
