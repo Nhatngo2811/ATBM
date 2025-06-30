@@ -289,6 +289,10 @@
         background-color: #ffa700;
         color: white;
     }
+    .btn-downloadTool{
+        background-color: #ffa700;
+        color: white;
+    }
 </style>
 </head>
 <body>
@@ -299,6 +303,23 @@
     <h1 style="text-align: left">Quản lý đơn hàng</h1>
 
     <div class="key-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px;">
+
+        <div class="downloadTool">
+            <button class="btn btn-downloadTool" onclick="downloadTool()">
+                <i class="fas fa-download"></i> Tải tool ký đơn hàng
+            </button>
+        </div>
+        <script>
+            function downloadTool() {
+                const link = document.createElement("a");
+                link.href = "<%= request.getContextPath() %>/download/mysetup.exe";
+                link.download = "mysetup.exe"; // đặt tên file khi tải về
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        </script>
+
         <div class="uploadKey">
 
             <button class="btn btn-uploadKey">Tải khóa public</button>
